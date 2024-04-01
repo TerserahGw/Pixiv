@@ -1,11 +1,11 @@
 from flask import Flask, jsonify, request
 import re
 from pixivpy3 import *
+import random
 
 app = Flask(__name__)
 api = AppPixivAPI()
 api.auth(refresh_token='VMne--uMWqwawZl_17_dhxsE4uc5RAhG_1wGQz5LGkY')
-
 
 def replace_origin_url(url):
     return url.replace('https://i.pximg.net/c/600x1200_90/img-master/img', 'https://i.pixiv.re/img-master/img')
@@ -23,11 +23,15 @@ def get_pixiv():
 def search_pixiv():
     query = request.args.get('q')
     json_result = api.search_illust(query, search_target='partial_match_for_tags')
-    if json_result.illusts:
-        illust = json_result.illusts[0]
-        image_url = illust.image_urls['large']
-        replaced_url = replace_origin_url(image_url)
-        return jsonify({'title': illust.title, 'origin_url': replaced_url})
+    illusts = json_result.illusts
+    if illusts:
+        random_illusts = random.sample(illusts, min(10, len(illusts)))
+        results = []
+        for illust in random_illusts:
+            image_url = illust.image_urls['large']
+            replaced_url = replace_origin_url(image_url)
+            results.append({'title': illust.title, 'origin_url': replaced_url})
+        return jsonify(results)
     else:
         return jsonify({'error': 'No results found for the query'})
 
