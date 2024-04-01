@@ -1,0 +1,4 @@
+Flask
+pixivpy3
+typing_extensions
+websockets
