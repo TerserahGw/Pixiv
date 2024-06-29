@@ -10,6 +10,10 @@ api.auth(refresh_token='VMne--uMWqwawZl_17_dhxsE4uc5RAhG_1wGQz5LGkY')
 def replace_origin_url(url):
     return url.replace('https://i.pximg.net/c/600x1200_90/img-master/img', 'https://i.pixiv.re/img-master/img')
 
+@app.route('/')
+def welcome():
+    return render_template('index.html')
+    
 @app.route('/getpixiv', methods=['GET'])
 def get_pixiv():
     illust_id = request.args.get('id')
